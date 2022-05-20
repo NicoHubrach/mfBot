@@ -1,0 +1,14 @@
+import { CommandInteraction } from "discord.js";
+import { SlashCommand } from "../letsFyuckiugnGoBayebe";
+import { SlashCommandBuilder } from "@discordjs/builders";
+
+const command: SlashCommand = {
+    data: new SlashCommandBuilder()
+        .setName("name")
+        .setDescription("description"),
+    async execute(interaction: CommandInteraction) {
+        console.log("execute")
+    }
+}
+
+module.exports = command;
