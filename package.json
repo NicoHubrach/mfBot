@@ -1,0 +1,19 @@
+{
+  "name": "milfhunterbot",
+  "description": "leck mich am Arsch",
+  "version": "1.0.0",
+  "engines": {
+    "node": "18.x"
+  },
+  "dependencies": {
+    "discord.js": "13.1.0",
+    "dotenv": "^16.0.1",
+    "node-fetch": "2",
+    "typescript": "^4.6.4"
+  },
+  "scripts": {
+    "build": "tsc --build tsconfig.json",
+    "start": "node dist/app.js",
+    "dev": "yarn build && yarn start"
+  }
+}
