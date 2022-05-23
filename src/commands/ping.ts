@@ -1,3 +1,6 @@
+/**
+ * Dummy Comment
+ */
 import { SlashCommandBuilder, SlashCommandStringOption } from "@discordjs/builders";
 import { SlashCommandInfo } from "../types";
 
