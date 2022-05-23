@@ -2,8 +2,6 @@ import { TextChannel } from "discord.js";
 import { between, makeRequest } from "../utils";
 import { SlashCommandBuilder } from "@discordjs/builders";
 import { SlashCommandInfo } from "../types";
-import { InteractionResponseType } from "discord-api-types/v10";
-
 
 const azur: SlashCommandInfo = {
     data: new SlashCommandBuilder()
