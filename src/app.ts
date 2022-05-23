@@ -1,30 +1,44 @@
-import { Collection, Interaction } from "discord.js";
-import { Client, Intents } from 'discord.js';
-import * as fs from "fs";
-import { SlashCommand } from "./letsFyuckiugnGoBayebe";
+import 'dotenv/config'
+import { Client, CommandInteraction, Intents } from 'discord.js';
+import * as fs from 'node:fs'
+import * as path from 'node:path'
+import { SlashCommandInfo } from './types';
 
-require("dotenv").config();
-
+// Create a new client instance
 const client = new Client({ intents: [Intents.FLAGS.GUILDS] });
 
-client.on('ready', () => {
-    console.log(`Logged in as ${client.user.tag}!`);
+// When the client is ready, run this code (only once)
+client.once('ready', () => {
+    console.log('Ready!');
 });
 
-//Einsammeln aller Slash Commands
-let commands = new Collection<string, SlashCommand>();
-const commandFiles = fs.readdirSync(`${__dirname}/commands`).filter(file => file.endsWith(".js"));
+/**
+ * Require all files under './commands/
+ * for each file
+ *  set interaction.commandName and file.execute in commands map
+ * 
+ * Register all Executes with their respective CommandNames in the Commands Map
+ */
+let commands = new Map<string, (interaction: CommandInteraction) => Promise<void>>();
+
+const commandsPath = path.join(__dirname, 'commands');
+const commandFiles = fs.readdirSync(commandsPath).filter(file => file.endsWith('.js'));
+
 for (const file of commandFiles) {
-    const command: SlashCommand = require(`${__dirname}/commands/${file}`);
-    commands.set(command.data.name, command);
+    const filePath = path.join(commandsPath, file);
+    const command: SlashCommandInfo = require(filePath);
+    commands.set(command.data.name, command.execute);
 }
 
-client.on('interactionCreate', async (interaction: Interaction) => {
-    if (!interaction.isCommand()) return;
-    const command = commands.get(interaction.commandName);
-    console.log(`Just got ${command.data.name} as the command`);
+/**
+ * Run the Method provided for each Interaction
+ */
+client.on('interactionCreate', async e => {
+    if (!e.isCommand()) return;
+    const command = commands.get(e.commandName);
     if (!command) return;
-    await command.execute(interaction);
-});
+    await command(e);
+})
 
-client.login(process.env.D_TOKEN);
+// Login to Discord with your client's token
+client.login(process.env.token);
