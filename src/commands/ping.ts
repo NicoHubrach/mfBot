@@ -1,7 +1,7 @@
 /**
  * Dummy Comment
  */
-import { SlashCommandBuilder, SlashCommandStringOption } from "@discordjs/builders";
+import { SlashCommandBuilder } from "@discordjs/builders";
 import { SlashCommandInfo } from "../types";
 
 const ping: SlashCommandInfo = {

@@ -1,8 +1,7 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
 import { TextChannel } from "discord.js";
 import { SlashCommandInfo } from "../types";
-import { between } from "../utils";
-import * as https from "node:https";
+import { between, makeRequest } from "../utils";
 
 const rule34: SlashCommandInfo = {
     data: new SlashCommandBuilder()
@@ -19,29 +18,18 @@ const rule34: SlashCommandInfo = {
 
             const index = between(1, 5384795)
 
-            https.get(`https://api.rule34.xxx/index.php?page=dapi&s=post&q=index&id=${index}&json=1`, res => {
-
-                let data: any[] = [];
-                const headerDate = res.headers && res.headers.date ? res.headers.date : 'no response date';
-                console.log('Status Code:', res.statusCode);
-                console.log('Date in Response header:', headerDate);
-
-                res.on('data', chunk => {
-                    data.push(chunk);
-                });
-
-                res.on('end', () => {
-                    const response = JSON.parse(Buffer.concat(data).toString());
+            makeRequest(`https://api.rule34.xxx/index.php?page=dapi&s=post&q=index&id=${index}&json=1`,
+                response => {
                     const url = response[0].file_url;
+                    interaction.reply(url);
+                },
+                error => {
+                    console.log(error);
                     interaction.reply({
-                        ephemeral: false,
-                        content: url,
+                        ephemeral: true,
+                        content: "Something went wrong",
                     })
                 });
-
-            }).on('error', err => {
-                console.log('Error: ', err.message);
-            });
         }
     }
 }
