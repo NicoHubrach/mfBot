@@ -29,7 +29,8 @@ const rule34: SlashCommandInfo = {
                         ephemeral: true,
                         content: "Something went wrong",
                     })
-                });
+                }
+            );
         }
     }
 }

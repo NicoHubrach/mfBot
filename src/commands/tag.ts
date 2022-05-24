@@ -1,12 +1,21 @@
+/**
+ * Dummy Comment
+ */
+import { SlashCommandBuilder, SlashCommandStringOption } from "@discordjs/builders";
 import { TextChannel } from "discord.js";
-import { between, makeRequest } from "../utils";
-import { SlashCommandBuilder } from "@discordjs/builders";
 import { SlashCommandInfo } from "../types";
+import { between, makeRequest } from "../utils";
 
-const azur: SlashCommandInfo = {
+const tag: SlashCommandInfo = {
     data: new SlashCommandBuilder()
-        .setName("azur")
-        .setDescription("Fetch Random Azur Lane Image from rule34"),
+        .setName("tag")
+        .setDescription("Fetch Random Image from rule34 including the given Tag")
+        .addStringOption(
+            new SlashCommandStringOption()
+                .setName("tag")
+                .setDescription("Tag to be searched for")
+                .setRequired(true)
+        ),
     async execute(interaction) {
 
         if (!(interaction.channel as TextChannel).nsfw) {
@@ -16,10 +25,11 @@ const azur: SlashCommandInfo = {
             });
         } else {
 
-            const pid = between(0, 534);
+            const pid = between(0, 10);
             const postId = between(0, 99);
+            const tag = interaction.options.get("tag", true).value;
 
-            makeRequest(`https://api.rule34.xxx/index.php?page=dapi&s=post&q=index&json=1&tags=azur_lane+&pid=${pid}`,
+            makeRequest(`https://api.rule34.xxx/index.php?page=dapi&s=post&q=index&json=1&tags=${tag}+&pid=${pid}`,
                 response => {
                     interaction.reply(response[postId].file_url);
                 },
@@ -35,4 +45,4 @@ const azur: SlashCommandInfo = {
     }
 }
 
-module.exports = azur;
+module.exports = tag;
